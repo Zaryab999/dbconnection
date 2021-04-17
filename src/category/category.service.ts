@@ -71,10 +71,22 @@ export class CategoryService {
   }
 
   
-  
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number)
+  {
+    const ID = id;
+    const user = await this.categoryrepository.findOne({where : {ID}});
+      
+    if(user)
+    { /*remove await from here if here is error in delete*/
+      const{Name} =user;
+      await this.categoryrepository.delete(id);
+      //throw new HttpException("user found",HttpStatus.FOUND);
+      return `  ${Name} Category Deleted`;
+    }
+      
+    else
+      throw new HttpException("Category not found",HttpStatus.BAD_REQUEST);
+    
   }
-
 
 }

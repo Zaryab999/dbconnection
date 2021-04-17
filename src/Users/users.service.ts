@@ -54,7 +54,19 @@ export class UsersService {
      
     }*/
       
-    /* Login Through SPs*/
+    async login(data: loginUserDto)
+    {
+      const {Email, Password} = data;
+      const customer = await this.usersrepository.findOne({where : {Email} });
+      if(!customer || !(await customer.compare(Password)))
+      {
+        throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
+      }
+      return customer.toResponseObject();
+    }
+
+  
+    /* Login Through SPs
 
     async login (loginuserdto:loginUserDto)
     {
@@ -64,7 +76,7 @@ export class UsersService {
       return await this.usersrepository.query("signin @u_name='"+Email +"',@pass='"+Password +"' ");
     }
 
-    
+    */
   
   /* Fetch all Users*/ 
 

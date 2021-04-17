@@ -4,7 +4,8 @@ import {
     PrimaryGeneratedColumn,
     Generated,
   } from 'typeorm';
-   
+  import * as jwt from 'jsonwebtoken';
+
   import { IsString, IsInt, IsNotEmpty } from 'class-validator';
   @Entity()
   export class Users {
@@ -29,6 +30,31 @@ import {
         return await true;
       else
         return await false;
+    }
+    toResponseObject(showToken: boolean = true)
+    {
+        const {ID, Name, Email ,token} = this;
+        const responseObject : any =  {ID, Name, Email , token};
+        if(!showToken)
+        {
+            responseObject.token = token;
+        }
+
+        return responseObject;
+    }
+
+
+    private get token(): string {
+      const { ID, Email } = this;
+  
+      return jwt.sign(
+        {
+          ID,
+          Email,
+        },
+        "ThisIsASecret",
+        { expiresIn: '7d' },
+      );
     }
    
   }
