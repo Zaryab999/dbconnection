@@ -57,12 +57,14 @@ export class UsersService {
     async login(data: loginUserDto)
     {
       const {Email, Password} = data;
+      console.log(Email,Password)
       const customer = await this.usersrepository.findOne({where : {Email} });
+      console.log(customer)
       if(!customer || !(await customer.compare(Password)))
       {
         throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
       }
-      return customer.toResponseObject();
+      return customer.ResponseObject();
     }
 
   

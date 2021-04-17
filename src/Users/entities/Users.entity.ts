@@ -31,20 +31,20 @@ import {
       else
         return await false;
     }
-    toResponseObject(showToken: boolean = true)
+    ResponseObject(showToken: boolean = true)
     {
-        const {ID, Name, Email ,token} = this;
-        const responseObject : any =  {ID, Name, Email , token};
+        const {ID, Name, Email ,access_token} = this;
+        const responseObject : any =  { Name, Email , access_token};
         if(!showToken)
         {
-            responseObject.token = token;
+            responseObject.token = access_token;
         }
-
+        //return "welcome";
         return responseObject;
     }
 
 
-    private get token(): string {
+    private get access_token(): string {
       const { ID, Email } = this;
   
       return jwt.sign(
@@ -52,7 +52,7 @@ import {
           ID,
           Email,
         },
-        "ThisIsASecret",
+        "abcd",
         { expiresIn: '7d' },
       );
     }

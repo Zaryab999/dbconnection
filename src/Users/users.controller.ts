@@ -32,6 +32,7 @@ export class UsersController {
   
   @Post('login')
   login (@Body() loginuserdto:loginUserDto){
+    console.log("abcd");
     return this.usersService.login(loginuserdto);
   }
 
