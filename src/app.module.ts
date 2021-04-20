@@ -8,10 +8,14 @@ import { UsersModule } from './Users/users.module';
 import {UsersController} from'src/Users/users.controller'
 import { UsersService } from 'src/users/users.service';
 import { CategoryModule } from './category/category.module';
+
+import { SubcategoryService } from './subcategory/subcategory.service';
+import { SubcategoryModule } from './subcategory/subcategory.module';
+
 //import {usersrepository} from UsersService;
 @Module({
-  imports: [DatabaseModule, UsersModule, CategoryModule],
-  controllers: [AppController, ],
-  providers: [AppService],
+  imports: [DatabaseModule, UsersModule, CategoryModule,  SubcategoryModule],
+  controllers: [AppController ],
+  providers: [AppService]
 })
 export class AppModule {}

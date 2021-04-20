@@ -57,14 +57,17 @@ export class UsersService {
     async login(data: loginUserDto)
     {
       const {Email, Password} = data;
-      console.log(Email,Password)
-      const customer = await this.usersrepository.findOne({where : {Email} });
-      console.log(customer)
-      if(!customer || !(await customer.compare(Password)))
+      //console.log(Email,Password)
+      const user = await this.usersrepository.findOne({where : {Email} });
+      //console.log(user)
+      if(!user || !(await user.compare(Password)))
       {
         throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
       }
-      return customer.ResponseObject();
+      console.log(user)
+      // console.log(user.ResponseObject());
+      
+      return user;
     }
 
   
@@ -85,6 +88,12 @@ export class UsersService {
   async findAll():Promise<Users[]>
   {
     return await this.usersrepository.find();
+  }
+
+  async findOnebyemail(data: loginUserDto): Promise<Users>
+  {
+    const {Email} = data;
+    return await this.usersrepository.findOne(Email);
   }
 
   /* Fetch single Users*/ 

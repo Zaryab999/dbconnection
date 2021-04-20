@@ -15,6 +15,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('email')
+  findOnebyemail(@Body() loginuserdto:loginUserDto) {
+    return this.usersService.findOnebyemail(loginuserdto);
+  }
+  
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
@@ -31,9 +36,8 @@ export class UsersController {
   }
   
   @Post('login')
-  login (@Body() loginuserdto:loginUserDto){
-    console.log("abcd");
-    return this.usersService.login(loginuserdto);
+  async login (@Body() loginuserdto:loginUserDto){
+    return await this.usersService.login(loginuserdto);
   }
 
   @Post('register')
