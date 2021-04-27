@@ -7,13 +7,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { from } from 'rxjs';
 import { exception } from 'node:console';
 import { loginUserDto } from './dto/loginUserDto';
-
+import {userroles} from 'src/Users/entities/User_Roles.entity'
+import { CreateUser_RoleDto } from './dto/createuser_role.dto';
 @Injectable()
 
 export class UsersService {
   constructor(
     @InjectRepository(Users)
-    private readonly usersrepository: Repository<Users>
+    private readonly usersrepository: Repository<Users>,
+    @InjectRepository(userroles)
+    private readonly userrolesrepository:Repository<userroles>
   ) { }
 
   /*Signup */ 
@@ -22,6 +25,7 @@ export class UsersService {
    {
       const {Email}= createUserDto;
       const {Name} = createUserDto;
+      
       const user = await this.usersrepository.findOne({where : {Email} });
       if(user)
       {
@@ -32,9 +36,38 @@ export class UsersService {
       {
         const user = await this.usersrepository.create(createUserDto);
         await this.usersrepository.save(user);
+
         return `user ${Name} created `;
       }
       
+      
+
+   }
+   async assignrole(CreateUser_RoleDto:CreateUser_RoleDto){
+    const{User_ID} = CreateUser_RoleDto
+    
+    const user = await this.userrolesrepository.findOne({where: {User_ID}})
+    if(user)
+      {
+        throw new HttpException('Role Already assigned to this user',HttpStatus.BAD_REQUEST);
+      }
+    else{
+    const user = await this.userrolesrepository.create(CreateUser_RoleDto);
+    await this.userrolesrepository.save(user);
+    return "Role assigned"
+    }
+   }
+   async updaterole(User_ID:number,r_id:number){
+
+    const user = await this.userrolesrepository.findOne({where: {User_ID}})
+    if(!user)
+      {
+        throw new HttpException('User have not assigned any role first assign the role',HttpStatus.BAD_REQUEST);
+      }
+    else{
+      await this.userrolesrepository.query("update userroles set Role_ID='"+r_id+"' where User_ID ='"+User_ID+"'");
+    }    
+
 
    }
 
@@ -64,10 +97,10 @@ export class UsersService {
       {
         throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
       }
-      console.log(user)
+      //console.log(user)
       // console.log(user.ResponseObject());
       
-      return user;
+      return user.ResponseObject();
     }
 
   

@@ -5,6 +5,8 @@ import {
     Generated,
   } from 'typeorm';
   import * as jwt from 'jsonwebtoken';
+  import { MailerService } from '@nestjs-modules/mailer';
+  //import {transporte}
 
   import { IsString, IsInt, IsNotEmpty } from 'class-validator';
   @Entity()
@@ -24,6 +26,10 @@ import {
     @Column({unique:true})
     @IsNotEmpty()
     Email: string;
+
+    @Column({default:false})
+    Isactive:boolean;
+    
 
    async compare(pass:string){
       if (pass==this.Password)
@@ -52,10 +58,24 @@ import {
           ID,
           Email,
         },
-        "abcd",
-        { expiresIn: '7d' },
+        "ThisIsASecret",  
+        { expiresIn: '1d' },
       );
     }
+    // public verify(){
+    //   jwt.sign(
+    //     {
+    //       user:_.pick(Users, this.ID),
+    //     },
+    //     "secret",
+    //     {expiresIn:'1d'},
+    //     (this.access_token)=>{
+    //       const url =`http://localhost:3000/abc/${}`;
+          
+
+    //     },
+    //   )
+    // }
    
   }
 //export class User {}

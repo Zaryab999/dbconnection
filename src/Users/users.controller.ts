@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {CreateUser_RoleDto} from './dto/createuser_role.dto'
 import {Users} from 'src/Users/entities/Users.entity';
 import {loginUserDto} from 'src/Users/dto/loginUserDto';
 @Controller('users')
@@ -44,5 +45,13 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
+  @Post('assign-role')
+  async createrole(@Body() createUserroleDto: CreateUser_RoleDto) {
+    return await this.usersService.assignrole(createUserroleDto);
+  }
+  @Patch(':id/:id1')
+  async updaterole(@Param('id') id: number,@Param('id1') id1:number) {
+    return await this.usersService.updaterole(id,id1);
+  } 
 
 }

@@ -79,7 +79,8 @@ export class CategoryService {
     if(user)
     { /*remove await from here if here is error in delete*/
       const{Name} =user;
-      await this.categoryrepository.delete(id);
+      //await this.categoryrepository.delete(id);
+      await this.categoryrepository.query("delete_Category @catid='"+id+"' ");
       //throw new HttpException("user found",HttpStatus.FOUND);
       return `  ${Name} Category Deleted`;
     }
