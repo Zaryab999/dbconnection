@@ -10,6 +10,9 @@ export class VerifyUserdto {
     
     @IsString()
     @IsNotEmpty()
-    readonly vtoken: number;
+    readonly vtoken: string;
+
+    @IsString()
+    readonly Email:string
    
 }

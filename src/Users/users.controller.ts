@@ -63,5 +63,15 @@ export class UsersController {
     console.log("in@post")
     return await this.usersService.verifyemail(verifyUserDto);
   }
-
+  // @Post('up_ver_st')
+  // async up_ver_St(@Body() verifyUserDto: VerifyUserdto) {
+  //   console.log("in up_vr")
+  @Post('changepass')
+  async changepass(@Body() verifyUserDto: VerifyUserdto) {
+    console.log("in change pass")
+    return await this.usersService.changepass(verifyUserDto);
+  }
+    
+  //   return await this.usersService.up_ver_st(verifyUserDto);
+  // }
 }

@@ -107,7 +107,10 @@ export class UsersService {
       const {Email, Password} = data;
       //console.log(Email,Password)
       const user = await this.usersrepository.findOne({where : {Email} });
+      
       //console.log(user)
+      
+      
       if(!user || !(await user.compare(Password)))
       {
         throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
@@ -199,7 +202,7 @@ export class UsersService {
   }
 */
 
-sendmail(vtoken:string,id:string,email:string){
+sendmail(vtoken:string,id:number,email:string){
   
   //this.usersrepository.query("up_vcode @vtoken='"+ vtoken +"',@email='"+ email +"' ")
   
@@ -231,10 +234,44 @@ sendmail(vtoken:string,id:string,email:string){
 
 
 }
-async verifyemail(verifyuserdto:VerifyUserdto){
+
+chpasssmail(vtoken:string,id:number,email:string){
+  
+  //this.usersrepository.query("up_vcode @vtoken='"+ vtoken +"',@email='"+ email +"' ")
+  
+  var nodemailer = require('nodemailer');
+  var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'zaryabsultan01@gmail.com',
+      pass: 'sxsymrutzuircztu'
+    }
+  });
+
+  var mailOptions = {
+    from: 'ecommerce@gmail.com',
+    to: `${email}`,
+    subject: 'Verify your Email',
+    html: `<h2>Plz Click the link below to verify your email</h2></br><a href="http://localhost:4200/changepass/${vtoken}/${id}" >CLICK ME TO CHANGE PASSWORD</a>`
+    
+  };
+  
+  mail.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+
+
+}
+async verifyemail(verifyuserdto:VerifyUserdto)
+{
   const {ID}= verifyuserdto;
   const {vtoken} = verifyuserdto;
-  
+  const{Email}  = verifyuserdto
   const useri = await this.usersrepository.findOne({where : {ID} });
   const uservt = await this.usersrepository.findOne({where : {vtoken} });
   
@@ -242,11 +279,45 @@ async verifyemail(verifyuserdto:VerifyUserdto){
   //console.log(user)
   
   if(useri && uservt)
-  {return useri }
+    {
+      const one:number=1
+      await this.usersrepository.query("UPDATE users SET Isverified= '"+one+"' WHERE ID= '"+ID+"'");
+      const vtoken1=null;
+      this.updatevtoken(vtoken1,Email);
+      return useri }
   else
     {return "failed"}
+
 }
 
+async changepass(verifydto:VerifyUserdto)
+{
+  const {Email} = verifydto;
+  
+  
+  const user = await this.usersrepository.findOne({where : {Email} });
+  console.log(user)
+  if(user)
+  {
+      const vtoken:any=user.ResponseObject();
+      this.updatevtoken(vtoken.access_token,vtoken.Email);
+      this.chpasssmail(vtoken.access_token,vtoken.ID,vtoken.Email);
+      //this.sendmail(vtoken,vtoken.ID,Email)
+  }
+  else
+    return "failed"
+}
+
+// async up_ver_st(verifyuserdto:VerifyUserdto){
+//   const one:number=1
+//   const {ID}= verifyuserdto;
+//   const user = await this.usersrepository.findOne({where : {ID} });
+//   if(!user){
+//     throw new HttpException("user not found",HttpStatus.BAD_REQUEST);
+//   }
+//   else
+//     await this.usersrepository.query("UPDATE users SET Isverified= '"+one+"' WHERE ID= '"+ID+"'");
+// }s
 
 
   /* Delete User*/
