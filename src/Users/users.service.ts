@@ -9,6 +9,9 @@ import { exception } from 'node:console';
 import { loginUserDto } from './dto/loginUserDto';
 import {userroles} from 'src/Users/entities/User_Roles.entity'
 import { CreateUser_RoleDto } from './dto/createuser_role.dto';
+import * as Mailgun from 'mailgun-js';
+import {VerifyUserdto} from 'src/Users/dto/verifyuser.dto';
+import { response } from 'express';
 @Injectable()
 
 export class UsersService {
@@ -36,13 +39,25 @@ export class UsersService {
       {
         const user = await this.usersrepository.create(createUserDto);
         await this.usersrepository.save(user);
-
-        return `user ${Name} created `;
+        const vtoken:any=user.ResponseObject();
+        this.updatevtoken(vtoken.access_token,vtoken.Email);
+        this.sendmail(vtoken.access_token,vtoken.ID,vtoken.Email);
+        //return `user ${Name} created `;
+        return user
       }
       
       
 
    }
+
+   async updatevtoken(vtoken:string,email:string){
+     console.log(vtoken)
+     console.log(email)
+
+    return await this.usersrepository.query("UPDATE users SET vtoken='"+vtoken+"' WHERE Email = '"+email+"'");
+   }
+
+
    async assignrole(CreateUser_RoleDto:CreateUser_RoleDto){
     const{User_ID} = CreateUser_RoleDto
     
@@ -156,6 +171,83 @@ export class UsersService {
       
     
   }
+  /*
+  sendemail()
+  
+  {
+   
+    console.log ("in send email")
+    var API_KEY = '4e021690f506bb90d064f7c9310d7879-4b1aa784-7f8a9964';
+    var DOMAIN = 'sandboxe4281acd0c154c78a338a1d0df63587f.mailgun.org';
+    var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
+
+    const data = {
+      from: 'sd@gmail.com',
+      to: 'Daniyalbhatti.in@gmail.com',
+      subject: 'Hello',
+      text: 'Testing some Mailgun awesomeness!'
+    };
+
+    mailgun.messages().send(data, (error, body) => {
+      if(error)
+        {console.log("error",error)}
+      console.log(body);
+    });
+  
+  
+  
+  }
+*/
+
+sendmail(vtoken:string,id:string,email:string){
+  
+  //this.usersrepository.query("up_vcode @vtoken='"+ vtoken +"',@email='"+ email +"' ")
+  
+  var nodemailer = require('nodemailer');
+  var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'zaryabsultan01@gmail.com',
+      pass: 'sxsymrutzuircztu'
+    }
+  });
+
+  var mailOptions = {
+    from: 'ecommerce@gmail.com',
+    to: `${email}`,
+    subject: 'Verify your Email',
+    html: `<h2>Plz Click the link below to verify your email</h2></br><a href="http://localhost:4200/verify/${vtoken}/${id}" >CLICK ME TO VERIFY </a>`
+    
+  };
+  
+  mail.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+
+
+}
+async verifyemail(verifyuserdto:VerifyUserdto){
+  const {ID}= verifyuserdto;
+  const {vtoken} = verifyuserdto;
+  
+  const useri = await this.usersrepository.findOne({where : {ID} });
+  const uservt = await this.usersrepository.findOne({where : {vtoken} });
+  
+  //const user= await this.usersrepository.query("SELECT * FROM users WHERE ID='"+ID+"' and vtoken='"+vtoken+"'");
+  //console.log(user)
+  
+  if(useri && uservt)
+  {return useri }
+  else
+    {return "failed"}
+}
+
+
 
   /* Delete User*/
   async remove(id: number)

@@ -7,8 +7,9 @@ import {
   import * as jwt from 'jsonwebtoken';
   import { MailerService } from '@nestjs-modules/mailer';
   //import {transporte}
-
+  import randomInteger from 'random-int';
   import { IsString, IsInt, IsNotEmpty } from 'class-validator';
+import { randomInt } from 'node:crypto';
   @Entity()
   export class Users {
     @PrimaryGeneratedColumn()
@@ -26,6 +27,8 @@ import {
     @Column({unique:true})
     @IsNotEmpty()
     Email: string;
+    @Column()
+    vtoken:string
 
     @Column({default:false})
     Isactive:boolean;
@@ -52,13 +55,14 @@ import {
 
     private get access_token(): string {
       const { ID, Email } = this;
-  
+      // const a=  Date.now.toString;
+      // console.log(a)
       return jwt.sign(
         {
           ID,
           Email,
         },
-        "ThisIsASecret",  
+        "secret",  
         { expiresIn: '1d' },
       );
     }

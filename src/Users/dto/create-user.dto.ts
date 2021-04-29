@@ -15,4 +15,7 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     readonly Email: string;
+
+    @IsString()
+    readonly Vtoken: string
 }

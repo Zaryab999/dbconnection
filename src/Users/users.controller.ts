@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import {CreateUser_RoleDto} from './dto/createuser_role.dto'
 import {Users} from 'src/Users/entities/Users.entity';
 import {loginUserDto} from 'src/Users/dto/loginUserDto';
+import {VerifyUserdto} from 'src/Users/dto/verifyuser.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -41,10 +42,10 @@ export class UsersController {
     return await this.usersService.login(loginuserdto);
   }
 
-  @Post('register')
+   @Post('register')
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
-  }
+     return await this.usersService.create(createUserDto);
+   }
   @Post('assign-role')
   async createrole(@Body() createUserroleDto: CreateUser_RoleDto) {
     return await this.usersService.assignrole(createUserroleDto);
@@ -53,5 +54,14 @@ export class UsersController {
   async updaterole(@Param('id') id: number,@Param('id1') id1:number) {
     return await this.usersService.updaterole(id,id1);
   } 
+  @Post('verify')
+  // verify(@Param('ID') ID: number,@Param('vtoken') vtoken:string){
+  //   console.log("in@post")
+  //   return this.usersService.verifyemail(vtoken,ID);
+  // }
+  async verify(@Body() verifyUserDto: VerifyUserdto) {
+    console.log("in@post")
+    return await this.usersService.verifyemail(verifyUserDto);
+  }
 
 }
