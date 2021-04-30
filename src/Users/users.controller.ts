@@ -6,6 +6,7 @@ import {CreateUser_RoleDto} from './dto/createuser_role.dto'
 import {Users} from 'src/Users/entities/Users.entity';
 import {loginUserDto} from 'src/Users/dto/loginUserDto';
 import {VerifyUserdto} from 'src/Users/dto/verifyuser.dto';
+//import { UpdateUserDto} from 'src/Users/dto/updateuser.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -55,23 +56,21 @@ export class UsersController {
     return await this.usersService.updaterole(id,id1);
   } 
   @Post('verify')
-  // verify(@Param('ID') ID: number,@Param('vtoken') vtoken:string){
-  //   console.log("in@post")
-  //   return this.usersService.verifyemail(vtoken,ID);
-  // }
+  
   async verify(@Body() verifyUserDto: VerifyUserdto) {
     console.log("in@post")
     return await this.usersService.verifyemail(verifyUserDto);
   }
-  // @Post('up_ver_st')
-  // async up_ver_St(@Body() verifyUserDto: VerifyUserdto) {
-  //   console.log("in up_vr")
-  @Post('changepass')
-  async changepass(@Body() verifyUserDto: VerifyUserdto) {
-    console.log("in change pass")
-    return await this.usersService.changepass(verifyUserDto);
+  
+  @Post('changepassreq')
+  async changepassreq(@Body() verifyUserDto: VerifyUserdto) {
+    console.log("in change pass request")
+    return await this.usersService.changepassreq(verifyUserDto);
   }
-    
-  //   return await this.usersService.up_ver_st(verifyUserDto);
-  // }
+  @Post('changepass')
+  async changepass(@Body() updateUserDto: UpdateUserDto) {
+    console.log("in change pass")
+    return await this.usersService.changepass(updateUserDto);
+  }
+  
 }

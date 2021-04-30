@@ -17,4 +17,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsString()
     @IsNotEmpty()
     readonly Email: string;
+    
+    @IsString()
+    @IsNotEmpty()
+    readonly vtoken: string;
+    
+
 }

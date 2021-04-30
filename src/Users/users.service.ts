@@ -51,8 +51,8 @@ export class UsersService {
    }
 
    async updatevtoken(vtoken:string,email:string){
-     console.log(vtoken)
-     console.log(email)
+      console.log(vtoken)
+      console.log(email)
 
     return await this.usersrepository.query("UPDATE users SET vtoken='"+vtoken+"' WHERE Email = '"+email+"'");
    }
@@ -107,7 +107,8 @@ export class UsersService {
       const {Email, Password} = data;
       //console.log(Email,Password)
       const user = await this.usersrepository.findOne({where : {Email} });
-      
+      //const{ID}=user
+      //const isverify=await this.userrolesrepository.query("SELECT Isverified from users where ID='"+ID+"'");
       //console.log(user)
       
       
@@ -251,8 +252,8 @@ chpasssmail(vtoken:string,id:number,email:string){
   var mailOptions = {
     from: 'ecommerce@gmail.com',
     to: `${email}`,
-    subject: 'Verify your Email',
-    html: `<h2>Plz Click the link below to verify your email</h2></br><a href="http://localhost:4200/changepass/${vtoken}/${id}" >CLICK ME TO CHANGE PASSWORD</a>`
+    subject: 'Change Your Password',
+    html: `<h2>Plz Click the link below to change your Password</h2></br><a href="http://localhost:4200/changepass/${vtoken}/${id}" >CLICK ME TO CHANGE PASSWORD</a>`
     
   };
   
@@ -274,7 +275,8 @@ async verifyemail(verifyuserdto:VerifyUserdto)
   const{Email}  = verifyuserdto
   const useri = await this.usersrepository.findOne({where : {ID} });
   const uservt = await this.usersrepository.findOne({where : {vtoken} });
-  
+  console.log(useri)
+  console.log(uservt)
   //const user= await this.usersrepository.query("SELECT * FROM users WHERE ID='"+ID+"' and vtoken='"+vtoken+"'");
   //console.log(user)
   
@@ -283,29 +285,53 @@ async verifyemail(verifyuserdto:VerifyUserdto)
       const one:number=1
       await this.usersrepository.query("UPDATE users SET Isverified= '"+one+"' WHERE ID= '"+ID+"'");
       const vtoken1=null;
-      this.updatevtoken(vtoken1,Email);
-      return useri }
+      const {Email} =useri
+      await this.usersrepository.query("UPDATE users SET vtoken='"+vtoken1+"' WHERE Email = '"+Email+"'");
+      return useri 
+    }
   else
     {return "failed"}
 
 }
 
-async changepass(verifydto:VerifyUserdto)
+async changepassreq(verifydto:VerifyUserdto)
 {
   const {Email} = verifydto;
   
-  
   const user = await this.usersrepository.findOne({where : {Email} });
-  console.log(user)
+  //console.log(user)
+  //console.log(Email)
+  //console.log("abc")
   if(user)
   {
       const vtoken:any=user.ResponseObject();
       this.updatevtoken(vtoken.access_token,vtoken.Email);
       this.chpasssmail(vtoken.access_token,vtoken.ID,vtoken.Email);
       //this.sendmail(vtoken,vtoken.ID,Email)
+      //return user
   }
   else
-    return "failed"
+  throw new HttpException("Error",HttpStatus.BAD_REQUEST);
+}
+
+
+async changepass(updateuser:UpdateUserDto){
+  console.log("in change pass 1")
+  const {vtoken}=updateuser;
+  const{Password}=updateuser;
+  const abc=null
+  //const user = await this.usersrepository.findOne({where:{vtoken} });
+  const user = await this.usersrepository.findOne({where : {vtoken} });
+  if(user){
+
+  const {ID}=user;
+  this.usersrepository.query("UPDATE users SET Password='"+Password+"' WHERE ID = '"+ID+"'")
+  this.usersrepository.query("UPDATE users SET vtoken='"+abc+"' WHERE ID = '"+ID+"'")
+  }
+  else{
+    throw new HttpException("Error",HttpStatus.BAD_REQUEST);
+  }
+
 }
 
 // async up_ver_st(verifyuserdto:VerifyUserdto){
