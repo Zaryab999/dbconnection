@@ -38,17 +38,28 @@ async create(createproductdto: CreateProductDto)
  }
 
   async findAll():Promise<Products[]> {
-    return await this.Productsrepository.find();
+    let products = [];
+    products= await this.Productsrepository.query("select * from Products where Active_ST=1");
+    return products
   }
 
   async findOne(id: number)
   {
-    const product= await this.Productsrepository.findOne(id);
+    const product= await this.Productsrepository.findOne(id)
     if(!product)
     throw new HttpException('no product with this id exists',HttpStatus.BAD_REQUEST);
     return product;
     
       
+  }
+  async finddetails(ID)
+  {
+    const product= await this.Productsrepository.query("select Products.Name,Products.Sku,Feature_Details.Feature_Value,Feature_Details.F_ID,Feature_Details.Pd_ID from((Products inner join productdetails on products.ID=productdetails.Pro_ID)inner join Feature_Details on productdetails.ID=Feature_Details.Pd_ID ) where Products.ID='"+ID+"'")
+    
+    if(!product)
+      throw new HttpException('no product with this id exists',HttpStatus.BAD_REQUEST);
+    
+      return product;
   }
   async update(ID: number, updateproductDto:UpdateProductDto ) {
     const cat= await this.Productsrepository.findOne({where :{ID}})

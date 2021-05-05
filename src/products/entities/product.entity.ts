@@ -6,7 +6,7 @@ import {
     Generated,
   } from 'typeorm';
    
-  import { IsString, IsInt, IsNotEmpty } from 'class-validator';
+  import { IsString, IsInt, IsNotEmpty, isString } from 'class-validator';
   @Entity()
   export class Products {
     @PrimaryGeneratedColumn()
@@ -36,6 +36,12 @@ import {
     @Column({unique:true})
     Subcat_ID: number;
 
+    @IsString()
+    @Column()
+    Image: string;
+    
+    @Column()
+    Price: number;
     
     }
    
