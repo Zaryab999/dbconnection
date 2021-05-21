@@ -54,12 +54,18 @@ async create(createproductdto: CreateProductDto)
   }
   async finddetails(ID)
   {
-    const product= await this.Productsrepository.query("select Products.Name,Products.Sku,Feature_Details.Feature_Value,Feature_Details.F_ID,Feature_Details.Pd_ID from((Products inner join productdetails on products.ID=productdetails.Pro_ID)inner join Feature_Details on productdetails.ID=Feature_Details.Pd_ID ) where Products.ID='"+ID+"'")
+    const product= await this.Productsrepository.query("select Products.Name,Products.Price,Products.ID,Products.Sku,Feature_Details.Feature_Value,Feature_Details.F_ID,Feature_Details.Pd_ID from((Products inner join productdetails on products.ID=productdetails.Pro_ID)inner join Feature_Details on productdetails.ID=Feature_Details.Pd_ID ) where Products.ID='"+ID+"'")
     
     if(!product)
       throw new HttpException('no product with this id exists',HttpStatus.BAD_REQUEST);
     
       return product;
+  }
+  async findspecdetails(ID)
+  {
+    const product = await this.Productsrepository.query("select * from Feature_Details where Pd_ID='"+ID+"'");
+    return product;
+
   }
   async update(ID: number, updateproductDto:UpdateProductDto ) {
     const cat= await this.Productsrepository.findOne({where :{ID}})

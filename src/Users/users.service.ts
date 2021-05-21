@@ -107,15 +107,19 @@ export class UsersService {
       const {Email, Password} = data;
       //console.log(Email,Password)
       const user = await this.usersrepository.findOne({where : {Email} });
+      
+      const{Isverified}=user
+      //console.log(Isverified)
       //const{ID}=user
       //const isverify=await this.userrolesrepository.query("SELECT Isverified from users where ID='"+ID+"'");
       //console.log(user)
       
       
-      if(!user || !(await user.compare(Password)))
+      if(!user || !(await user.compare(Password)) ||!Isverified)
       {
         throw new HttpException('Invalid Email or Password', HttpStatus.BAD_REQUEST,);
       }
+      
       //console.log(user)
       // console.log(user.ResponseObject());
       

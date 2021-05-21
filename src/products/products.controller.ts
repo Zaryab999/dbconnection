@@ -25,6 +25,12 @@ export class ProductsController {
   finddetails(@Param('id') id: string){
     return this.productsService.finddetails(id)
   }
+  
+  @Get('specdetails/:id')
+  findspecdetails(@Param('id') id: string){
+    console.log("in controller")
+    return this.productsService.findspecdetails(id);
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {

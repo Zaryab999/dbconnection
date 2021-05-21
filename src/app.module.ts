@@ -13,6 +13,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { SubcategoryService } from './subcategory/subcategory.service';
 import { SubcategoryModule } from './subcategory/subcategory.module';
 import { ProductsModule } from './products/products.module';
+import { OrderModule } from './order/order.module';
 
 //import {usersrepository} from UsersService;
 @Module({
@@ -30,7 +31,7 @@ import { ProductsModule } from './products/products.module';
   //       },
   //     },
   //   }),
-  DatabaseModule, UsersModule, CategoryModule,  SubcategoryModule, ProductsModule],
+  DatabaseModule, UsersModule, CategoryModule,  SubcategoryModule, ProductsModule, OrderModule],
   controllers: [AppController ],
   providers: [AppService]
 })

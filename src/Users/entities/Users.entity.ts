@@ -33,6 +33,9 @@ import { randomInt } from 'node:crypto';
     @Column({default:false})
     Isactive:boolean;
     
+    @Column()
+    Isverified:boolean
+    
 
    async compare(pass:string){
       if (pass==this.Password)
