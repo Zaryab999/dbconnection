@@ -25,7 +25,11 @@ export class ProductsController {
   finddetails(@Param('id') id: string){
     return this.productsService.finddetails(id)
   }
-  
+  @Get('unique/:color/:size')
+  finduniqueproduct(@Param('color')color:any,@Param ('size')size:any){
+    return this.productsService.uniquely_identify_product(color,size)
+  }
+
   @Get('specdetails/:id')
   findspecdetails(@Param('id') id: string){
     console.log("in controller")

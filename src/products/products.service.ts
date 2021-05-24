@@ -81,6 +81,16 @@ async create(createproductdto: CreateProductDto)
     }
     
   }
+  async uniquely_identify_product(color:any,size:any){
+    const product = await this.Productsrepository.query("uniquely_identify_product @f_value1='"+color+"',@f_value2='"+size+"' ")
+    const{Pd_ID}=product
+    //const product = await this.Productsrepository.query("find_user_role @f_value1='"+color+"'")
+    if(!product)
+      throw new HttpException('no product with this id exists',HttpStatus.BAD_REQUEST);
+    console.log(Pd_ID)
+    return product;
+
+  }
   async remove(id: number)
   {
     const ID = id;
