@@ -18,8 +18,7 @@ import {
     @Column()
     Discount:Number
     
-    @Column()
-    Pd_ID: number;
+    
 
     @Column()
     Order_ST:number
