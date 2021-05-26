@@ -108,4 +108,8 @@ async create(createproductdto: CreateProductDto)
       throw new HttpException("Sub-Category not found",HttpStatus.BAD_REQUEST);
     
   }
+  async getsizes(ID){
+    const sizes = await this.Productsrepository.query("select * from Sizes where Pd_ID='"+ID+"'");
+    return sizes;
+  }
 }

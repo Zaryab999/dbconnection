@@ -10,27 +10,27 @@ import {
   @Entity()
   export class Orders {
     @PrimaryGeneratedColumn()
-    ID: number;
+    ID: number
     
     @Column()
-    User_ID:number;
+    User_ID:number
     
     @Column()
-    Discount:Number
+    Discount:number
     
     
 
     @Column()
-    Order_ST:number
+    Order_ST:string
     
     @Column()
-    DC: number;
+    DC: number
    
     @Column()
-    Price:number;
+    Price:number
 
     @Column()
-    OrderDate:number;
+    OrderDate:number
 
     
   

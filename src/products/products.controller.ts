@@ -21,6 +21,10 @@ export class ProductsController {
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);
   }
+  @Get('getsizes/:id')
+  getsizes(@Param('id') id: any){
+    return this.productsService.getsizes(id)
+  }
   @Get('details/:id')
   finddetails(@Param('id') id: string){
     return this.productsService.finddetails(id)
